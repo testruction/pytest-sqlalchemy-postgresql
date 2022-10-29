@@ -1,7 +1,6 @@
 jwt
 pytest
 sqlalchemy
-sqlalchemy-migrate
 psycopg2-binary
 opentelemetry-exporter-otlp
 opentelemetry-instrumentation-dbapi
