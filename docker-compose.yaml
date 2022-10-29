@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: docker.io/amd64/postgres:14-alpine
+    restart: always
+    hostname: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "55432:5432"
+
+  jaeger:
+    image: quay.io/jaegertracing/all-in-one:latest
+    environment:
+        COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "58686:16686"
+      - "54317:4317"
