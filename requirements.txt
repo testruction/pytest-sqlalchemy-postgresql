@@ -1,5 +1,6 @@
-jwt
 pytest
+pytest-dotenv
+python-dotenv
 sqlalchemy
 psycopg2-binary
 opentelemetry-exporter-otlp

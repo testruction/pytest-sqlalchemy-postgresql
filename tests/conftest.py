@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.config import DevelopmentConfig
 
 import pytest
+from dotenv import load_dotenv
 
 
 @pytest.fixture(scope="session")
