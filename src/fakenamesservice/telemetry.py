@@ -17,7 +17,6 @@ def init_tracer(args):
     resource = Resource.create(attributes={"service.namespace": "io.testruction",
                                            "service.name": "fakenamesservice"})
 
-
     provider = TracerProvider()
     # processor = BatchSpanProcessor(ConsoleSpanExporter())
     # provider.add_span_processor(processor)
