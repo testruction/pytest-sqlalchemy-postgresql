@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-import os, argparse
+import os
+import argparse
+
+from sqlalchemy.engine import URL
+
+from fakenamesservice.logging import init_logger
+from fakenamesservice.telemetry import init_tracer
 
 # CLI arguments composition
 parser = argparse.ArgumentParser()
@@ -28,30 +34,26 @@ parser.add_argument('--password',
 parser.add_argument('--database',
                     type=str,
                     help='Name of the database',
-                    default=os.environ.get('POSTGRES_DB', default='default'))
+                    default=os.environ.get('POSTGRES_DB', default='postgres'))
 args, unknown = parser.parse_known_args()
 
-# Initialize logging
-from app.logging import init_logger
+# Initialize logging and telemetry
 init_logger(args)
-
-# Initialize telemetry
-from app.telemetry import init_tracer
 init_tracer(args)
 
-from sqlalchemy.engine import URL
-class Config(object):  
+
+class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_NABLED = True
     SITE_NAME = 'app'
     SECRET_KEY = os.urandom(32)
-    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql',
-                                         username = args.username,
-                                         password = args.password,
-                                         host = args.host,
-                                         port = args.port,
-                                         database = args.database)
+    SQLALCHEMY_DATABASE_URI = URL.create(drivername='postgresql+pg8000',
+                                         username=args.username,
+                                         password=args.password,
+                                         host=args.host,
+                                         port=args.port,
+                                         database=args.database)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

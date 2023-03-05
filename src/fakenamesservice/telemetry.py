@@ -6,7 +6,7 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProces
 
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
-import psycopg2
+import pg8000
 from opentelemetry.instrumentation.dbapi import trace_integration
 
 
@@ -15,7 +15,7 @@ def init_tracer(args):
     Tracing configuration using OpenTelemetry
     """
     resource = Resource.create(attributes={"service.namespace": "io.testruction",
-                                           "service.name": "pytest-sqlalchemy"})
+                                           "service.name": "fakenamesservice"})
 
 
     provider = TracerProvider()
@@ -33,6 +33,6 @@ def init_tracer(args):
         trace.get_tracer_provider().add_span_processor(
             SimpleSpanProcessor(ConsoleSpanExporter()))
     
-    trace_integration(connect_module=psycopg2,
+    trace_integration(connect_module=pg8000,
                       connect_method_name="connect",
                       database_system="postgresql")

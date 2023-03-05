@@ -1,21 +1,42 @@
-version: '3.7'
+version: "3.7"
 
 services:
-  postgres:
-    image: docker.io/amd64/postgres:14-alpine
-    restart: always
-    hostname: postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+
+  proxy:
+    image: envoyproxy/envoy:distroless-dev
+    command: -c /etc/envoy/envoy.yml
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${ENVOY_ADMIN_PORT:-8081}:8081"
+      - "${POSTGRES_PORT:-5432}:26257"
+      - "${COCKROACH_PORT:-26257}:26257"
+      - "${COCKROACH_WEBUI_PORT:-8080}:8080"
+    volumes:
+      - ./envoy.yml:/etc/envoy/envoy.yml
+
+  roach1:
+    image: cockroachdb/cockroach:latest-v22.2
+    command: start --insecure --join=roach1,roach2,roach3 --advertise-addr=roach1
+    volumes:
+      - /cockroach/cockroach-data
+
+  roach2:
+    image: cockroachdb/cockroach:latest-v22.2
+    command: start --insecure --join=roach1,roach2,roach3 --advertise-addr=roach2
+    volumes:
+      - /cockroach/cockroach-data
+
+  roach3:
+    image: cockroachdb/cockroach:latest-v22.2
+    command: start --insecure --join=roach1,roach2,roach3 --advertise-addr=roach3
+    volumes:
+      - /cockroach/cockroach-data
 
   jaeger:
     image: quay.io/jaegertracing/all-in-one:latest
+    restart: always
     environment:
-        COLLECTOR_OTLP_ENABLED: "true"
+      LOG_LEVEL: debug
+      COLLECTOR_OTLP_ENABLED: 'true'
     ports:
-      - "${JAEGER_WEBUI_PORT:-16686}:16686"
+      - "${JARGER_WEBUI_PORT:-16686}:16686"
       - "${OTLP_EXPORTER_PORT:-4317}:4317"

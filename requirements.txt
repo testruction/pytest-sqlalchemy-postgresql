@@ -1,7 +1,9 @@
 pytest
 pytest-dotenv
-python-dotenv
+pandas
 sqlalchemy
+pydantic
+pg8000
 psycopg2-binary
 opentelemetry-exporter-otlp
 opentelemetry-instrumentation-dbapi
