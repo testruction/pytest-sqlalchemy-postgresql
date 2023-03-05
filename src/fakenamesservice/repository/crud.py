@@ -20,8 +20,8 @@ def create(db: Session, identity: schemas.FakenamesCreate) -> bool:
             current_span = trace.get_current_span()
             # current_span.set_attributes({'enduser.id': get_openid_user()})
 
-            db_identity = models.Fakenames(**identity.dict())
-            guid = db_identity['guid']
+            db_identity = models.Fakenames(**identity)
+            guid = db_identity.guid
             db.add(db_identity)
             db.commit()
 
@@ -83,7 +83,7 @@ def read(db: Session, guid: str):
     return response
 
 
-def udpate(db: Session, identity: schemas.FakenamesCreate) -> bool:
+def update(db: Session, identity: schemas.FakenamesCreate) -> bool:
     """ Update a givent identity """
     response = None
     guid = None
@@ -93,8 +93,8 @@ def udpate(db: Session, identity: schemas.FakenamesCreate) -> bool:
             current_span = trace.get_current_span()
             # current_span.set_attributes({'enduser.id': get_openid_user()})
 
-            db_identity = models.Fakenames(**identity.dict())
-            guid = db_identity.dict()['guid']
+            db_identity = models.Fakenames(**identity)
+            guid = db_identity.guid
             db.merge(db_identity)
             db.commit()
 
