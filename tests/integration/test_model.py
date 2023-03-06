@@ -60,6 +60,7 @@ def test_model_read(dbsession):
     guid = '71160a30-b20f-4cef-91d9-5cf57c5112e4'
     response = crud.read(dbsession, guid=guid)
     logger.info(f'''
+                action:    "read"
                 number:    "{response.number}"
                 firstname: "{response.givenname}"
                 lastname:  "{response.surname}"
