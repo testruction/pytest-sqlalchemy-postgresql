@@ -5,8 +5,8 @@ source hack/libraries/custom-logger.sh -v
 
 if [ ! -f .env ]
 then
-    ewarn 'Environment ".env" file not found.'
-    ewarn 'Creating using default settings from ".env.example."'
+    ewarn 'Environment ".env" file not found'
+    ewarn 'Creating using default settings from ".env.example"'
     cp .env.example .env
 fi
 
@@ -28,6 +28,6 @@ eok 'Pythond virtual environment initialized'
 
 
 python3 tests/populate.py
-eok 'database populated using "tests/integration/fakenames.csv" dataset'
+eok 'Database populated using "tests/integration/fakenames.csv" dataset'
 
 eok 'Development environment successfully initialized'
