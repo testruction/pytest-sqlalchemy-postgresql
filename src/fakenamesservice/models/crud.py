@@ -3,7 +3,7 @@ import logging
 
 from sqlalchemy.orm import Session
 
-from fakenamesservice.repository import models, schemas
+from fakenamesservice.models import models, schemas
 
 from opentelemetry import trace
 

@@ -3,10 +3,11 @@ import logging
 import pkg_resources
 import csv
 import itertools
+import difflib
 
 from contextlib import closing
 
-from fakenamesservice.repository import crud
+from fakenamesservice.models import crud
 
 logger = logging.getLogger(__name__)
 # for logger_name in [__name__, 'sqlalchemy.engine']:
@@ -26,23 +27,32 @@ def test_model_create(dbsession):
         reader = list(reader)
         
         payload = reader[25]
-        logger.info(payload)
         payload['number'] = int(payload['number']) + 9000
+
+        logger.info(f'''
+                action:    "create"
+                number:    "{payload['number']}"
+                firstname: "{payload['givenname']}"
+                lastname:  "{payload['surname']}"
+                guid:      "{payload['guid']}"
+                ''')
         
         response = crud.create(dbsession, payload)
     assert response == True
         
 
 
-def test_model_read_100(dbsession):
+def test_model_read_all_limit_default(dbsession):
+    limit = 100 # default
     response = crud.read_all(dbsession)
-    logger.info(len(response))
+    logger.info(f'Found "{len(response)}/{limit}" records')
     assert len(response) == 100
 
 
-def test_model_read_all(dbsession):
-    response = crud.read_all(dbsession, limit=1000)
-    logger.info(len(response))
+def test_model_read_all_limit_1000(dbsession):
+    limit = 1000
+    response = crud.read_all(dbsession, limit=limit)
+    logger.info(f'Found "{len(response)}/{limit}" records')
     assert len(response) == 1000
 
 
@@ -62,11 +72,18 @@ def test_model_update(dbsession):
     with closing(open(dataset, encoding='utf-8-sig')) as f:
         reader = csv.DictReader(lower_first(f))
         reader = list(reader)
-        
+
         payload = reader[10]
-        logger.info(payload)
         payload['number'] = int(payload['number']) + 10
-        
+
+        logger.info(f'''
+                action:    "update"
+                number:    "{payload['number']}"
+                firstname: "{payload['givenname']}"
+                lastname:  "{payload['surname']}"
+                guid:      "{payload['guid']}"
+                ''')
+
         response = crud.update(dbsession, payload)
     assert response == True
     
@@ -75,6 +92,7 @@ def test_model_delete(dbsession):
     guid = '9dc0ed75-61fc-47a4-8ad8-57206ff37add'
     check = crud.read(dbsession, guid=guid)
     logger.info(f'''
+                action:    "delete"
                 number:    "{check.number}"
                 firstname: "{check.givenname}"
                 lastname:  "{check.surname}"

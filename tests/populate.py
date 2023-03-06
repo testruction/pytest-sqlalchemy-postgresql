@@ -11,11 +11,11 @@ import csv
 from contextlib import closing
 
 from fakenamesservice.database import SessionLocal, engine
-from fakenamesservice.repository import models
+from fakenamesservice.models import models
 
 logger = logging.getLogger(__name__)
-logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
-logger.setLevel('DEBUG')
+logging.getLogger('sqlalchemy.engine').setLevel(logging.ERROR)
+logger.setLevel('ERROR')
 
 dataset = pkg_resources.resource_filename(__name__,
                                           'integration/fakenames.csv')
@@ -25,6 +25,7 @@ def lower_first(iterator):
 
 
 with SessionLocal() as session:
+    models.Base.metadata.drop_all(bind=engine)
     models.Base.metadata.create_all(bind=engine)
 
     with closing(open(dataset, encoding='utf-8-sig')) as f:

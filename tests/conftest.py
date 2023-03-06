@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from fakenamesservice.config import DevelopmentConfig
-from fakenamesservice.repository import models
+from fakenamesservice.models import models
 
 logger = logging.getLogger(__name__)
 
